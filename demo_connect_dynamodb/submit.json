@@ -1,0 +1,20 @@
+{
+  "name": "Tracking_DynamoDBSink",
+  "config": {
+    "topics": "public.cc.sr.pb.demo",
+    "input.data.format": "PROTOBUF",
+    "connector.class": "DynamoDbSink",
+    "name": "DynamoDbSinkConnector_0",
+    "kafka.auth.mode": "KAFKA_API_KEY",
+    "kafka.api.key": "(KAFKA_API_KEY)",
+    "kafka.api.secret": "(KAFKA_API_SECRET)",
+    "aws.access.key.id": "(AWS_ACCESS_KEY_ID)",
+    "aws.secret.access.key": "(AWS_SECRET_ACCESS_KEY)",
+    "aws.dynamodb.pk.hash": "partition",
+    "aws.dynamodb.pk.sort": "offset",
+    "table.name.format": "kafka-${topic}",
+    "tasks.max": "1"
+  }
+}
+
+

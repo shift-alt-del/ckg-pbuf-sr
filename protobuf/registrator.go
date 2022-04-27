@@ -8,7 +8,7 @@ import (
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/protoparse"
 	"github.com/jhump/protoreflect/desc/protoprint"
-	"github.com/xtruder/go-kafka-protobuf/srclient"
+	"go-kafka-protobuf/srclient"
 )
 
 type SchemaRegistrator struct {
@@ -22,6 +22,40 @@ func NewSchemaRegistrator(srclient srclient.Client) *SchemaRegistrator {
 	return &SchemaRegistrator{
 		srclient: srclient,
 		printer:  printer,
+	}
+}
+
+func (r *SchemaRegistrator) SetKeyCompatibility(ctx context.Context, topic string, compatibility string) {
+	// todo: the logic is duplicate here, refactor this to introduce a common function.
+	subject := topic + "-key"
+
+	currComp, _ := r.srclient.GetSchemaCompatibility(ctx, subject)
+	fmt.Printf("Current key compatibility: %s\n", currComp)
+
+	if currComp != compatibility {
+		changeToComp, err := r.srclient.SetSchemaCompatibility(ctx, subject, compatibility)
+
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("Updated to key compatibility: %s\n", changeToComp)
+	}
+}
+
+func (r *SchemaRegistrator) SetValueCompatibility(ctx context.Context, topic string, compatibility string) {
+	// todo: the logic is duplicate here, refactor this to introduce a common function.
+	subject := topic + "-value"
+
+	currComp, _ := r.srclient.GetSchemaCompatibility(ctx, subject)
+	fmt.Printf("Current value compatibility: %s\n", currComp)
+
+	if currComp != compatibility {
+		changeToComp, err := r.srclient.SetSchemaCompatibility(ctx, subject, compatibility)
+
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("Updated to value compatibility: %s\n", changeToComp)
 	}
 }
 

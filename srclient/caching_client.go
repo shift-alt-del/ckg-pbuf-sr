@@ -316,3 +316,13 @@ func (c *CachingClient) IsSchemaCompatible(ctx context.Context, schema *Schema) 
 func (c *CachingClient) GetSchemaSubjectVersions(ctx context.Context, schemaID int) (map[string]int, error) {
 	return c.client.GetSchemaSubjectVersions(ctx, schemaID)
 }
+
+func (c *CachingClient) GetSchemaCompatibility(ctx context.Context, subject string) (string, error) {
+	return c.client.GetSchemaCompatibility(ctx, subject)
+}
+func (c *CachingClient) SetSchemaCompatibility(ctx context.Context, subject string, compatibility string) (string, error) {
+	return c.client.SetSchemaCompatibility(ctx, subject, compatibility)
+}
+func (c *CachingClient) DeleteSchemaCompatibility(ctx context.Context, subject string) (string, error) {
+	return c.client.DeleteSchemaCompatibility(ctx, subject)
+}

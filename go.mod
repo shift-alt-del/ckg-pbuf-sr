@@ -1,9 +1,10 @@
-module github.com/xtruder/go-kafka-protobuf
+module go-kafka-protobuf
 
 go 1.15
 
 require (
-	github.com/confluentinc/confluent-kafka-go v1.5.2 // indirect
+	github.com/aws/aws-lambda-go v1.29.0 // indirect
+	github.com/confluentinc/confluent-kafka-go v1.8.2 // indirect
 	github.com/goburrow/cache v0.1.3
 	github.com/golang/mock v1.4.4
 	github.com/golang/protobuf v1.4.3
@@ -14,5 +15,5 @@ require (
 	golang.org/x/sys v0.0.0-20201223074533-0d417f636930 // indirect
 	golang.org/x/text v0.3.4 // indirect
 	google.golang.org/protobuf v1.25.1-0.20200805231151-a709e31e5d12
-	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.5.2
+	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.8.2
 )

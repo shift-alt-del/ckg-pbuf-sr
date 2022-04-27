@@ -1,0 +1,8 @@
+aws dynamodb create-table \
+  --region ap-southeast-1 \
+  --table-name Tracking \
+  --attribute-definitions \
+        AttributeName=orgId,AttributeType=S \
+        AttributeName=id,AttributeType=S \
+  --key-schema AttributeName=orgId,KeyType=HASH AttributeName=id,KeyType=RANGE \
+  --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1

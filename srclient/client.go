@@ -73,6 +73,9 @@ type Client interface {
 	DeleteSubject(ctx context.Context, subject string, permanent bool) ([]int, error)
 	DeleteSchemaByVersion(ctx context.Context, subject string, version int, permanent bool) (int, error)
 	IsSchemaCompatible(ctx context.Context, schema *Schema) (bool, error)
+	GetSchemaCompatibility(ctx context.Context, subject string) (string, error)
+	SetSchemaCompatibility(ctx context.Context, subject string, compatibility string) (string, error)
+	DeleteSchemaCompatibility(ctx context.Context, subject string) (string, error)
 }
 
 // Option interface is here, so we can type check if valid arg is parsed as Option to client

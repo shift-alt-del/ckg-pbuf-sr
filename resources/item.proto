@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package resources;
+option go_package = "resources/generated";
+
+message Item {
+  string name = 1;
+  string value = 2;
+}

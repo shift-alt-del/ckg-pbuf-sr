@@ -1,0 +1,4 @@
+set -x
+aws dynamodb list-tables --region ap-southeast-1
+aws dynamodb describe-table --region ap-southeast-1 --table-name Tracking
+

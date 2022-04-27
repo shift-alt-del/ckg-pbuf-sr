@@ -24,6 +24,7 @@ const (
 	urlSubject                = urlPath("/subjects/%s")
 	urlSubjectVersions        = urlPath("/subjects/%s/versions")
 	urlSchemaCompatibility    = urlPath("/compatibility/subjects/%s/versions/%s")
+	urlSchemaConfig           = urlPath("/config/%s")
 )
 
 var ErrNotFound = errors.New("404 not found")
@@ -40,6 +41,15 @@ func schemaRequestFromSchema(schema *Schema) (request schemaRequest) {
 	request.Schema = schema.GetRawSchema()
 	request.SchemaType = schema.Type.String()
 	request.References = schema.References
+	return
+}
+
+type configRequest struct {
+	Compatibility string `json:"compatibility"`
+}
+
+func configRequestPayload(compatibility string) (request configRequest) {
+	request.Compatibility = compatibility
 	return
 }
 
@@ -259,6 +269,62 @@ func (c *BaseClient) IsSchemaCompatible(ctx context.Context, schema *Schema) (bo
 	}
 
 	return resp.IsCompatible, nil
+}
+
+func (c *BaseClient) GetSchemaCompatibility(ctx context.Context, subject string) (string, error) {
+	// https://docs.confluent.io/platform/current/schema-registry/develop/api.html#get--config-(string-%20subject)
+	type response struct {
+		Compatibility string `json:"compatibilityLevel"`
+	}
+
+	uri := urlSchemaConfig.Format(subject)
+
+	resp := &response{}
+	err := c.jsonRequest(ctx, "GET", uri, nil, resp)
+
+	if err != nil {
+		return "", fmt.Errorf("error getting subject compatibility: %w", err)
+	}
+	return resp.Compatibility, nil
+}
+
+func (c *BaseClient) SetSchemaCompatibility(ctx context.Context, subject string, compatibility string) (string, error) {
+	// https://docs.confluent.io/platform/current/schema-registry/develop/api.html#put--config-(string-%20subject)
+	type response struct {
+		Compatibility string `json:"compatibility"`
+	}
+
+	// todo: needs to check input, compatibility
+	// must be one of BACKWARD, BACKWARD_TRANSITIVE, FORWARD, FORWARD_TRANSITIVE, FULL, FULL_TRANSITIVE, NONE
+	// API will raise error if any unavailable values.
+
+	confReq := configRequestPayload(compatibility)
+	uri := urlSchemaConfig.Format(subject)
+
+	resp := &response{}
+	err := c.jsonRequest(ctx, "PUT", uri, confReq, resp)
+
+	if err != nil {
+		return "", fmt.Errorf("error setting subject compatibility: %w", err)
+	}
+	return resp.Compatibility, nil
+}
+
+func (c *BaseClient) DeleteSchemaCompatibility(ctx context.Context, subject string) (string, error) {
+	// https://docs.confluent.io/platform/current/schema-registry/develop/api.html#delete--config-(string-%20subject)
+	type response struct {
+		Compatibility string `json:"compatibility"`
+	}
+
+	uri := urlSchemaConfig.Format(subject)
+
+	resp := &response{}
+	err := c.jsonRequest(ctx, "DELETE", uri, nil, resp)
+
+	if err != nil {
+		return "", fmt.Errorf("error deleting subject compatibility: %w", err)
+	}
+	return resp.Compatibility, nil
 }
 
 func (c *BaseClient) GetSchemaSubjectVersions(ctx context.Context, schemaID int) (map[string]int, error) {

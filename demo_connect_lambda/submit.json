@@ -1,0 +1,16 @@
+{
+  "connector.class": "LambdaSink",
+  "name": "LambdaSinkConnector_0",
+  "topics": "public.cc.sr.pb.demo",
+  "input.data.format": "PROTOBUF",
+  "kafka.auth.mode": "KAFKA_API_KEY",
+  "kafka.api.key": "(KAFKA_API_KEY)",
+  "kafka.api.secret": "(KAFKA_API_SECRET)",
+  "aws.access.key.id": "(AWS_ACCESS_KEY_ID)",
+  "aws.secret.access.key": "(AWS_SECRET_ACCESS_KEY)",
+  "aws.lambda.function.name": "pbuf-sr-dev-demo",
+  "aws.lambda.invocation.type": "sync",
+  "aws.lambda.batch.size": "20",
+  "behavior.on.error": "log",
+  "tasks.max": "1"
+}

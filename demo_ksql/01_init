@@ -1,0 +1,72 @@
+#!/bin/sh
+KSQL_CLUSTER=tracking
+TS=`date +"%Y%m%d_%H%M%S"`
+D="deleteme_${TS}"
+
+echo "rm ${D}" > ${D}
+
+confluent kafka cluster list
+echo
+echo Type the Kafka cluster Id to use for the KSQL cluster:
+echo
+read CLUSTER
+
+
+confluent ksql cluster list
+EXISTS=`confluent ksql cluster list | grep $KSQL_CLUSTER|wc -l`
+if [ "$EXISTS" -eq 1 ]
+then
+  echo "Cluster $KSQL_CLUSTER already exists; not recreating. Continuing"
+else
+  confluent ksql cluster create $KSQL_CLUSTER --cluster $CLUSTER --api-key ${SASL_USERNAME} --api-secret "${SASL_PASSWORD}" --csu 1
+  if [ $? -ne 0 ]; then
+    echo "KSQL cluster creation failed due to reason above"
+    echo
+    return
+  fi
+  echo 'Checking KSQL cluster status, it can take a few minutes to provision, so please be patient ¯\_(ツ)_/¯'
+  STATUS=PROVISIONING
+fi
+
+
+STATUS=$(confluent ksql cluster list | grep $KSQL_CLUSTER | tail -1 | awk '{print $NF}')
+while [ "$STATUS" != "UP" ]; do
+  STATUS=$(confluent ksql cluster list | grep $KSQL_CLUSTER | tail -1 | awk '{print $NF}')
+  sleep 5
+  printf "."
+done
+printf "\n"
+
+
+KSQL_ID=$(confluent ksql cluster list | grep $KSQL_CLUSTER | awk -F '|' '{print $1}'|sed "s/ //")
+KSQL_URL=$(confluent ksql cluster list |grep $KSQL_CLUSTER |  awk -F '|' '{print $6}'|sed "s/ //")
+echo "confluent ksql cluster delete ${KSQL_ID}" >> ${D}
+SERVICE_ACCOUNT=$(confluent iam service-account list| awk -F"|" '$3 ~ "SA for\." {print $1" "$2}' | grep ${KSQL_ID} | awk '{print $1}' | sed "s/ //")
+echo "Granting ACL's for service-account $SERVICE_ACCOUNT to authorize ksqlDB to create topics for $KSQL_CLUSTER"
+confluent kafka acl create --cluster $CLUSTER --allow --service-account $SERVICE_ACCOUNT --operation WRITE --topic '*'
+confluent kafka acl create --cluster $CLUSTER --allow --service-account $SERVICE_ACCOUNT --operation READ --topic '*'
+confluent kafka acl create --cluster $CLUSTER --allow --service-account $SERVICE_ACCOUNT --operation CREATE --cluster-scope
+confluent kafka acl create --cluster $CLUSTER --allow --service-account $SERVICE_ACCOUNT --operation DELETE --cluster-scope
+
+#next : not needed
+#Error: ACLs do not need to be configured for the ksqlDB app, "lksqlc-do9mdy", because it was created with user-level access to the Kafka cluster
+
+CREDENTIALS=$(confluent api-key create --service-account $SERVICE_ACCOUNT --resource $KSQL_ID)
+USERNAME=$(echo $CREDENTIALS | awk -F '|' '{print $3}'|sed 's/ //g')
+PASSWORD=$(echo $CREDENTIALS | awk -F '|' '{print $6}'|sed 's/ //g')
+echo
+echo "Waiting 60 secs for credentials to propogate...."
+echo "confluent api-key delete ${USERNAME}" >> ${D}
+sleep 60
+
+
+# Submit KSQL queries
+echo "credentials are #$USERNAME# and #$PASSWORD#"
+
+cat statements.sql | ksql -u ${USERNAME} -p ${PASSWORD} ${KSQL_URL}
+
+echo ""
+echo ""
+echo ""
+echo "Deployment of $KSQL_CLUSTER Complete"
+
