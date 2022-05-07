@@ -7,8 +7,8 @@ This repo is compatible with the Confluent SR (some are compatible with other SR
 ## Demo & Examples
 
 - To produce and consume `Protobuf` message using `confluent-kafka-go` and `sarama`, please refer to [./demo](./demo). This demo uses the Kafka cluster on [Confluent Cloud](https://confluent.cloud).
-- A Protobuf + Confluent Lambda Sink example under [./demo_connect_lambda](./demo_connect_lambda).
-- A Protobuf + Confluent DynamoDB Sink example under [./demo_connect_dynamodb](./demo_connect_dynamodb).
+- A Protobuf + Confluent Lambda Sink connector example under [./demo_connect_lambda](./demo_connect_lambda).
+- A Protobuf + Confluent DynamoDB Sink connector example under [./demo_connect_dynamodb](./demo_connect_dynamodb).
 - Some ksqlDB scripts under [./demo_ksql](./demo_ksql) for stream processing to play with data in realtime.
 - To modify and re-generate `Protobuf` resources, please refer to [./resources/readme.md](./resources)
 
