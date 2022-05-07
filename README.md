@@ -1,9 +1,11 @@
 
 # ckg-pbuf-sr
 This repo is
-* compatible with the Confluent SR (some are compatible with other SR's such as landoop)
-* using confluent-kafka-go client
+* compatible with the Confluent Schema-Registry (some are compatible with other SR's such as landoop)
 * serializes as protobuf
+* example code for both `confluent-kafka-go` and `sarama` client
+* Confluent `ksqlDB`, `Connect` examples of processing protobuf messages.
+
 
 
 ## Project structure
@@ -14,15 +16,15 @@ This repo is
 - protobuf files
 - run `protoc -I ./resources --go_out=. item.proto user.proto` to generate code, source code will be generated to `/resorces/generated` folder.
 
-**Producer & Consumer demo**
+**Producer & Consumer demo (`confluent-kafka-go` and `sarama`)**
 
-`/demo/ccsr_producer.go`
+`/demo/ccsr_producer.go`, `/demo/ccsr_sarama_producer.go` 
 - connects to Confluent Cloud using the (embedded) configuration
 - connects to the CCSR using basic auth
 - registers a protobuf schema for topic `public.cc.sr.pb.demo`, if one doesnt exist
 - produce messages into topic `public.cc.sr.pb.demo`, serialized as pbuf using sync; returning success/failure and the offset
 
-`/demo/ccsr_consumer.go`
+`/demo/ccsr_consumer.go`, `/demo/ccsr_sarama_consumer.go`
 - connects to Confluent Cloud using the (embedded) configuration
 - consumes messages from topic `public.cc.sr.pb.demo`, deserialized from pbuf.
 
@@ -75,4 +77,5 @@ registry integration. It should be later refactored in proper library,
 whether merging with upstream project or as separate project.
 - Refactor from [markteehan](https://github.com/markteehan) 's private repo.
 - [Confluent Kafka Go client](https://docs.confluent.io/clients-confluent-kafka-go/current/overview.html#go-example-code) (Protobuf is not officially supported, for any updates, please refer to the Confluent website.)
+- [Sarama](https://github.com/Shopify/sarama)
 - [Protocol Buffers](https://developers.google.com/protocol-buffers/docs/gotutorial)
