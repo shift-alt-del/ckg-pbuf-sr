@@ -1,17 +1,15 @@
 
 # ckg-pbuf-sr
 
-This repo is:
-- Compatible with the Confluent SR (some are compatible with other SR's such as landoop).
-- Serializes message as `Protobuf`.
+This repo is compatible with the Confluent SR (some are compatible with other SR's such as landoop). Serializes message as `Protobuf`.
 
 
 ## Demo & Examples
 
-- To produce and consume `Protobuf` message using `confluent-kafka-go` and `sarama`, please refer to these [examples](./demo). This demo uses the Kafka cluster on [Confluent Cloud](https://confluent.cloud).
-- An [example](./demo_connect_lambda) for Protobuf + Confluent Lambda Sink.
-- An [example](./demo_connect_dynamodb) for Protobuf + Confluent DynamoDB Sink.
-- Some [ksqlDB scripts](./demo_ksql) for stream processing to play with data in realtime.
+- To produce and consume `Protobuf` message using `confluent-kafka-go` and `sarama`, please refer to [./demo](./demo). This demo uses the Kafka cluster on [Confluent Cloud](https://confluent.cloud).
+- A Protobuf + Confluent Lambda Sink example under [./demo_connect_lambda](./demo_connect_lambda).
+- A Protobuf + Confluent DynamoDB Sink example under [./demo_connect_dynamodb](./demo_connect_dynamodb).
+- Some ksqlDB scripts under [./demo_ksql](./demo_ksql) for stream processing to play with data in realtime.
 - To modify and re-generate `Protobuf` resources, please refer to [./resources/readme.md](./resources)
 
 
