@@ -1,26 +1,16 @@
 
-## How to run
+## Setup
 
 - Make sure you have Go installed.
 - Please config system environment variables as below. You can get all information from https://confluent.cloud.
-- You need create the topic `public.cc.sr.pb.demo` before you run the code.
-- The following steps will produce to (or consume from) the topic `public.cc.sr.pb.demo` in `Protobuf` format.
 
 ```
-export BOOTSTRAP_SERVERS=example.confluent.cloud:9092
-export SASL_USERNAME=(get from confluent.cloud)
-export SASL_PASSWORD=(get from confluent.cloud)
-export SR_URL=https://example.confluent.cloud
-export SR_USERNAME=(get from confluent.cloud)
-export SR_PASSWORD=(get from confluent.cloud)
-
-# for producer
-go run ccsr_producer.go
-go run ccsr_sarama_producer.go
-
-# for consumer
-go run ccsr_consumer.go
-go run ccsr_sarama_consumer.go 
+BOOTSTRAP_SERVERS=example.confluent.cloud:9092
+SASL_USERNAME=(get from confluent.cloud)
+SASL_PASSWORD=(get from confluent.cloud)
+SR_URL=https://example.confluent.cloud
+SR_USERNAME=(get from confluent.cloud)
+SR_PASSWORD=(get from confluent.cloud)
 ```
 
 ## Confluent Cloud + Schema-Registry + Protobuf + Kafka Producer
