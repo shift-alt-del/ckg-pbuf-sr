@@ -1,8 +1,11 @@
 
 
-## Install Chalice
-https://aws.github.io/chalice/quickstart.html
-https://aws.github.io/chalice/topics/purelambda.html
+## Write a lambda function in Python (If you don't have one)
+
+Documents:
+- https://aws.github.io/chalice/quickstart.html
+- https://aws.github.io/chalice/topics/purelambda.html
+
 ```
 pip install -r requirements.txt
 
@@ -14,15 +17,16 @@ aws_secret_access_key=YOUR_SECRET_ACCESS_KEY
 region=YOUR_REGION (such as us-west-2, us-west-1, etc)
 ```
 
-## Deploy
+## Deploy lambda function
 
 Run `chalice deploy` to deploy/update lambda functions.
 
 ```
 cd lambda/pbuf-sr
 chalice deploy
-
-## Create connect
 ```
-cd lambda
+
+## Deploy Lambda Sink to Confluent Cloud 
+```
 confluent connect create --config submit.json
+```

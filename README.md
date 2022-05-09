@@ -1,78 +1,20 @@
 
 # ckg-pbuf-sr
-This repo is
-* compatible with the Confluent Schema-Registry (some are compatible with other SR's such as landoop)
-* serializes as protobuf
-* example code for both `confluent-kafka-go` and `sarama` client
-* Confluent `ksqlDB`, `Connect` examples of processing protobuf messages.
+
+This repo is compatible with the Confluent SR (some are compatible with other SR's such as landoop). Serializes message as `Protobuf`.
 
 
+## Demo & Examples
 
-## Project structure
+- To produce and consume `Protobuf` message using `confluent-kafka-go` and `sarama`, please refer to [./demo](./demo). This demo uses the Kafka cluster on [Confluent Cloud](https://confluent.cloud).
+- A Protobuf + Confluent Lambda Sink connector example under [./demo_connect_lambda](./demo_connect_lambda).
+- A Protobuf + Confluent DynamoDB Sink connector example under [./demo_connect_dynamodb](./demo_connect_dynamodb).
+- Some ksqlDB scripts under [./demo_ksql](./demo_ksql) for stream processing to play with data in realtime.
+- To modify and re-generate `Protobuf` resources, please refer to [./resources/readme.md](./resources)
 
-**Protobuf resources**
-
-`/resources`
-- protobuf files
-- run `protoc -I ./resources --go_out=. item.proto user.proto` to generate code, source code will be generated to `/resorces/generated` folder.
-
-**Producer & Consumer demo (`confluent-kafka-go` and `sarama`)**
-
-`/demo/ccsr_producer.go`, `/demo/ccsr_sarama_producer.go` 
-- connects to Confluent Cloud using the (embedded) configuration
-- connects to the CCSR using basic auth
-- registers a protobuf schema for topic `public.cc.sr.pb.demo`, if one doesnt exist
-- produce messages into topic `public.cc.sr.pb.demo`, serialized as pbuf using sync; returning success/failure and the offset
-
-`/demo/ccsr_consumer.go`, `/demo/ccsr_sarama_consumer.go`
-- connects to Confluent Cloud using the (embedded) configuration
-- consumes messages from topic `public.cc.sr.pb.demo`, deserialized from pbuf.
-
-**AWS Lambda sink connector demo**
-
-`demo_connect_lambda/pbuf-sr`
-- a demo Lambda function using python chalice package, it prints out both parameters and shows batch.size.
-
-`demo_connect_lambda/submit.json`
-- a json file for Lambda sink connector deploy.
-- run `confluent connect create --config submit.json` to deploy connector.
-
-**AWS Dynamodb sink connector demo** 
-
-`demo_connect_dynamodb/01_init`
-- creates dynamodb table for dynamodb sink demo.
-
-`demo_connect_dynamodb/submit.json`
-- a json file for Dynamodb sink connector deploy.
-- run `confluent connect create --config submit.json` to deploy connector.
-
-**ksqlDB demo**
-
-`demo_ksql/01_init`
-- a simple script to help create cluster and ksqlDB cluster on CC.
-
-`demo_ksql/statements.sql`
-- some simple KSQL scripts to process data in realtime.
-
-## Verify result:
-```
-TOPIC=public.cc.sr.pb.demo
-KAFKA=pkc...
-SR_URL=https://psrc...
-SR_AUTH=xxx:xxx
-CLIENT_CONFIG=/var/tmp/pbuf_go.config.2
-
-kafka-protobuf-console-consumer --bootstrap-server $KAFKA                                  \ 
-                                --topic ${TOPIC}                                           \ 
-                                --property schema.registry.url=${SR_URL}                   \
-                                --property basic.auth.credentials.source=USER_INFO         \
-                                --property schema.registry.basic.auth.user.info="$SR_AUTH" \
-                                --from-beginning                                           \
-                                --consumer.config ${CLIENT_CONFIG}
-```
 
 ## References:
-- Refactor based on work done by: https://github.com/xtruder/go-kafka-protobuf - This project is for experimenting of go - kafka - protobuf - confluent schema
+- Refactor based on work done by: [go-kafka-protobuf](https://github.com/xtruder/go-kafka-protobuf) - This project is for experimenting of go - kafka - protobuf - confluent schema
 registry integration. It should be later refactored in proper library,
 whether merging with upstream project or as separate project.
 - Refactor from [markteehan](https://github.com/markteehan) 's private repo.
