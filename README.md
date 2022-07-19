@@ -3,6 +3,8 @@
 
 This repo is compatible with the Confluent SR (some are compatible with other SR's such as landoop). Serializes message as `Protobuf`.
 
+## This demo is now archived
+confluent-kafka-go `1.9.1` now supports SchemaRegistry both Avro Protocol Buffers and JsonSchema are available, see the [release note](https://github.com/confluentinc/confluent-kafka-go/releases/tag/v1.9.1).
 
 ## Demo & Examples
 
